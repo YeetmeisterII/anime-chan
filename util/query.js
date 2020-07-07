@@ -36,6 +36,21 @@ module.exports = {
     }
   },
 
+  matchAnimeAndPaginated: async function (anime_slug, page) {
+    try {
+      const db = await schema
+        .aggregate([
+          { $match: { "anime.anime_slug": anime_slug } },
+          { $project: formatModal },
+        ])
+        .skip(10 * (page - 1))
+        .limit(10);
+      return db;
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
   matchChar: async function (char_slug) {
     try {
       const db = await schema.aggregate([
